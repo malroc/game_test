@@ -20,7 +20,8 @@ defmodule GameTest.Engine do
   def handle_call(:state, state), do: {:ok, state}
 
   def handle_cast(:create_player, state) do
-    players = %{state.players | Player.new(state.players, state.walls)}
+    player = Player.new(state.players, state.walls)
+    players = %{state.players | player.name => player}
 
     {:noreply, %{state | players: players}}
   end
@@ -29,9 +30,9 @@ defmodule GameTest.Engine do
     players =
       case state.players[player_name] do
         nil ->
-          %{state.players | Player.new(state.players, state.walls, player_name)}
+          %{state.players | player_name => Player.new(state.players, state.walls, player_name)}
 
-        player ->
+        _player ->
           state.players
       end
 
