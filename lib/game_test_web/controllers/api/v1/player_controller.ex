@@ -14,10 +14,10 @@ defmodule GameTestWeb.Api.V1.PlayerController do
     end
   end
 
-  def update(conn, %{"id" => name, "atacking" => true}) do
+  def update(conn, %{"id" => name, "attacking" => true}) do
     case get_session(conn, :current_user_name) do
       ^name ->
-        player = GenServer.call(Engine, {:atack_other_players, name})
+        player = GenServer.call(Engine, {:attack_other_players, name})
         render(conn, "show.json", player: player)
 
       _ ->
