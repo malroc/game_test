@@ -15,3 +15,49 @@ import "phoenix_html"
 //
 // Local files can be imported directly using relative paths, for example:
 // import socket from "./socket"
+
+async function render() {
+  let response = await fetch("./api/v1/players")
+  let players = await response.json()
+
+  for (let div of document.querySelectorAll(".cell:not(.wall)")) {
+    div.className = "cell"
+    div.innerHTML = ""
+  }
+
+  for (let p of players) {
+    let div = document.getElementById(`cell-${p["y"]}-${p["x"]}`)
+    div.classList.add("player")
+
+    if (p["name"] == document.currentUserName) {
+      div.classList.add("current")
+    }
+
+    if (!p["is_alive"]) {
+      div.classList.add("dead")
+    }
+
+    div.innerHTML = p["name"]
+  }
+}
+
+function updatePlayer(body) {
+  fetch(
+    `./api/v1/players/${document.currentUserName}`,
+    {
+      method: "PUT",
+      body: JSON.stringify(body),
+      headers: {'Content-Type': 'application/json'}
+    }
+  )
+}
+
+render()
+setInterval(render, 1000)
+
+document.getElementById("move-left").onclick = () => updatePlayer({moving: "left"})
+document.getElementById("move-right").onclick = () => updatePlayer({moving: "right"})
+document.getElementById("move-up").onclick = () => updatePlayer({moving: "up"})
+document.getElementById("move-down").onclick = () => updatePlayer({moving: "down"})
+
+document.getElementById("attack").onclick  = () => updatePlayer({attacking: true})

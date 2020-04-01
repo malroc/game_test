@@ -1,35 +1,22 @@
-<section class="phx-hero">
-  <h1><%= gettext "Welcome to %{name}!", name: "Phoenix" %></h1>
-  <p>A productive web framework that<br/>does not compromise speed or maintainability.</p>
-</section>
-
-<section class="row">
-  <article class="column">
-    <h2>Resources</h2>
-    <ul>
-      <li>
-        <a href="https://hexdocs.pm/phoenix/overview.html">Guides &amp; Docs</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix">Source</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix/blob/v1.4/CHANGELOG.md">v1.4 Changelog</a>
-      </li>
-    </ul>
-  </article>
-  <article class="column">
-    <h2>Help</h2>
-    <ul>
-      <li>
-        <a href="https://elixirforum.com/c/phoenix-forum">Forum</a>
-      </li>
-      <li>
-        <a href="https://webchat.freenode.net/?channels=elixir-lang">#elixir-lang on Freenode IRC</a>
-      </li>
-      <li>
-        <a href="https://twitter.com/elixirphoenix">Twitter @elixirphoenix</a>
-      </li>
-    </ul>
-  </article>
-</section>
+<script>
+  document.currentUserName = "<%= get_session(@conn, :current_user_name) %>"
+</script>
+<div class="map">
+  <% %{walls: walls} = GenServer.call(GameTest.Engine, :state) %>
+  <%= Enum.map((-1..GameTest.World.map_height()), fn row_id -> %>
+    <%= Enum.map((-1..GameTest.World.map_width()), fn col_id -> %>
+      <div id="cell-<%= row_id %>-<%= col_id %>"
+           class="cell <%= if GameTest.World.wall_exists?(walls, col_id, row_id) do %>wall<% end %>">
+      </div>
+    <% end) %>
+    <br />
+  <% end) %>
+</div>
+<div class="controls">
+  <button id="move-left">Left</button>
+  <button id="move-down">Down</button>
+  <button id="move-up">Up</button>
+  <button id="move-right">Right</button>
+  <br/>
+  <button id="attack" class="attack">Atack</button>
+</div>

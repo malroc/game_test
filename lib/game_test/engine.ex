@@ -21,36 +21,35 @@ defmodule GameTest.Engine do
 
   def handle_call(:state, _from, state), do: {:reply, state, state}
 
-  def handle_cast(:create_player, state) do
+  def handle_call(:create_player, _from, state) do
     player = Player.new(state.players, state.walls)
-    players = %{state.players | player.name => player}
+    players = Map.put(state.players, player.name, player)
 
-    {:noreply, %{state | players: players}}
+    {:reply, player, %{state | players: players}}
   end
 
-  def handle_cast({:maybe_create_player, player_name}, state) do
-    players =
+  def handle_call({:maybe_create_player, player_name}, _from, state) do
+    {player, players} =
       case state.players[player_name] do
         nil ->
-          %{state.players | player_name => Player.new(state.players, state.walls, player_name)}
+          player = Player.new(state.players, state.walls, player_name)
+          {player, Map.put(state.players, player_name, player)}
 
-        _player ->
-          state.players
+        player ->
+          {player, state.players}
       end
 
-    {:noreply, %{state | players: players}}
+    {:reply, player, %{state | players: players}}
   end
 
-  def handle_cast({:attack_other_players, player_name}, state) do
-    players =
-      state.players
-      |> Map.get(player_name)
-      |> Player.attack(state.players)
+  def handle_call({:attack_other_players, player_name}, _from, state) do
+    player = Map.get(state.players, player_name)
+    players = Player.attack(player, state.players)
 
-    {:noreply, %{state | players: players}}
+    {:reply, player, %{state | players: players}}
   end
 
-  def handle_cast({:move_player, player_name, direction}, state) do
+  def handle_call({:move_player, player_name, direction}, _from, state) do
     player =
       state.players
       |> Map.get(player_name)
@@ -62,10 +61,10 @@ defmodule GameTest.Engine do
           state.players
 
         player ->
-          %{state.players | player_name: player}
+          %{state.players | player_name => player}
       end
 
-    {:noreply, %{state | players: players}}
+    {:reply, player, %{state | players: players}}
   end
 
   def handle_info(:respawn_players, state) do

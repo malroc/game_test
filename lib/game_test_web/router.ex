@@ -11,6 +11,7 @@ defmodule GameTestWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
   end
 
   scope "/api/v1", GameTestWeb.Api.V1 do
