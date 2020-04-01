@@ -27,11 +27,11 @@
   background-color: #f4f;
 }
 
-.cell.player.current {
+.cell.current.player {
   background-color: #4f4;
 }
 
-.cell.player.dead {
+.cell.current.player.dead {
   background-color: #f44;
 }
 

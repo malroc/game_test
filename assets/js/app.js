@@ -25,19 +25,32 @@ async function render() {
     div.innerHTML = ""
   }
 
+  let currentUser = null
+  let currentUserDiv = null
+
   for (let p of players) {
     let div = document.getElementById(`cell-${p["y"]}-${p["x"]}`)
     div.classList.add("player")
-
-    if (p["name"] == document.currentUserName) {
-      div.classList.add("current")
-    }
 
     if (!p["is_alive"]) {
       div.classList.add("dead")
     }
 
     div.innerHTML = p["name"]
+
+    if (p["name"] == document.currentUserName) {
+      currentUser = p
+      currentUserDiv = div
+    }
+  }
+
+  if (currentUser && currentUserDiv) {
+    currentUserDiv.innerHTML = currentUser["name"]
+    currentUserDiv.classList.add("current")
+
+    if (currentUser["is_alive"]) {
+      currentUserDiv.classList.remove("dead")
+    }
   }
 }
 
