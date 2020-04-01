@@ -13,6 +13,12 @@ defmodule GameTestWeb.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/api/v1", GameTestWeb.Api.V1 do
+    pipe_through :api
+
+    resources "/players", PlayerController, only: [:index, :update]
+  end
+
   scope "/", GameTestWeb do
     pipe_through :browser
 

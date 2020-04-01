@@ -8,7 +8,9 @@ defmodule GameTest.Engine do
   @default_respawn_interval 5_000
 
   def start_link(options) do
-    GenServer.start_link(__MODULE__, options[:respawn_interval] || @default_respawn_interval)
+    GenServer.start_link(__MODULE__, options[:respawn_interval] || @default_respawn_interval,
+      name: __MODULE__
+    )
   end
 
   def init(respawn_interval) do
@@ -17,7 +19,7 @@ defmodule GameTest.Engine do
     {:ok, %{players: %{}, respawn_interval: respawn_interval, walls: World.generate_walls()}}
   end
 
-  def handle_call(:state, state), do: {:ok, state}
+  def handle_call(:state, _from, state), do: {:reply, state, state}
 
   def handle_cast(:create_player, state) do
     player = Player.new(state.players, state.walls)
