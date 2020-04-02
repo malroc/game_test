@@ -25,8 +25,8 @@ async function render() {
     div.innerHTML = ""
   }
 
-  let currentUser = null
-  let currentUserDiv = null
+  let currentPlayer = null
+  let currentPlayerDiv = null
 
   for (let p of players) {
     let div = document.getElementById(`cell-${p.y}-${p.x}`)
@@ -38,19 +38,19 @@ async function render() {
 
     div.innerHTML = p.name
 
-    if (p.name == document.currentUserName) {
-      currentUser = p
-      currentUserDiv = div
+    if (p.name == document.currentPlayerName) {
+      currentPlayer = p
+      currentPlayerDiv = div
     }
   }
 
-  if (currentUser && currentUserDiv) {
-    currentUserDiv.innerHTML = currentUser.name
-    currentUserDiv.classList.add("current")
+  if (currentPlayer && currentPlayerDiv) {
+    currentPlayerDiv.innerHTML = currentPlayer.name
+    currentPlayerDiv.classList.add("current")
 
-    if (currentUser.status == "alive") {
-      currentUserDiv.classList.remove("dead")
-    } else if (currentUser.status == "dead") {
+    if (currentPlayer.status == "alive") {
+      currentPlayerDiv.classList.remove("dead")
+    } else if (currentPlayer.status == "dead") {
       updatePlayer({status: "respawning"})
     }
   }
@@ -58,7 +58,7 @@ async function render() {
 
 function updatePlayer(body) {
   fetch(
-    `./api/v1/players/${document.currentUserName}`,
+    `./api/v1/players/${document.currentPlayerName}`,
     {
       method: "PUT",
       body: JSON.stringify(body),

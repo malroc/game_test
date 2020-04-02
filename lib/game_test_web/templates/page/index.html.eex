@@ -1,5 +1,5 @@
 <script>
-  document.currentUserName = "<%= get_session(@conn, :current_user_name) %>"
+  document.currentPlayerName = "<%= get_session(@conn, :current_player_name) %>"
 </script>
 <div class="map">
   <% %{walls: walls} = GenServer.call(GameTest.Engine, :state) %>

@@ -5,14 +5,14 @@ defmodule GameTestWeb.PageController do
 
   def index(conn, %{"name" => name}) do
     conn =
-      with ^name <- get_session(conn, :current_user_name),
+      with ^name <- get_session(conn, :current_player_name),
            false <- is_nil(name),
            %{players: %{^name => _player}} <- GenServer.call(Engine, :state) do
         conn
       else
         _ ->
           player = GenServer.call(Engine, {:maybe_create_player, name})
-          put_session(conn, :current_user_name, player.name)
+          put_session(conn, :current_player_name, player.name)
       end
 
     render(conn, "index.html")
@@ -20,14 +20,14 @@ defmodule GameTestWeb.PageController do
 
   def index(conn, _params) do
     conn =
-      with name <- get_session(conn, :current_user_name),
+      with name <- get_session(conn, :current_player_name),
            false <- is_nil(name),
            %{players: %{^name => _player}} <- GenServer.call(Engine, :state) do
         conn
       else
         _ ->
           player = GenServer.call(Engine, :create_player)
-          put_session(conn, :current_user_name, player.name)
+          put_session(conn, :current_player_name, player.name)
       end
 
     render(conn, "index.html")

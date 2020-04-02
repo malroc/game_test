@@ -4,7 +4,7 @@ defmodule GameTestWeb.Api.V1.PlayerController do
   alias GameTest.Engine
 
   def update(conn, %{"id" => name} = params) do
-    case get_session(conn, :current_user_name) do
+    case get_session(conn, :current_player_name) do
       ^name ->
         player = update_player(name, Map.delete(params, "id"))
         render(conn, "show.json", player: player)
