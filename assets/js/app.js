@@ -29,27 +29,29 @@ async function render() {
   let currentUserDiv = null
 
   for (let p of players) {
-    let div = document.getElementById(`cell-${p["y"]}-${p["x"]}`)
+    let div = document.getElementById(`cell-${p.y}-${p.x}`)
     div.classList.add("player")
 
-    if (!p["is_alive"]) {
+    if (p.status != "alive") {
       div.classList.add("dead")
     }
 
-    div.innerHTML = p["name"]
+    div.innerHTML = p.name
 
-    if (p["name"] == document.currentUserName) {
+    if (p.name == document.currentUserName) {
       currentUser = p
       currentUserDiv = div
     }
   }
 
   if (currentUser && currentUserDiv) {
-    currentUserDiv.innerHTML = currentUser["name"]
+    currentUserDiv.innerHTML = currentUser.name
     currentUserDiv.classList.add("current")
 
-    if (currentUser["is_alive"]) {
+    if (currentUser.status == "alive") {
       currentUserDiv.classList.remove("dead")
+    } else if (currentUser.status == "dead") {
+      updatePlayer({status: "respawning"})
     }
   }
 }
@@ -66,7 +68,7 @@ function updatePlayer(body) {
 }
 
 render()
-setInterval(render, 1000)
+setInterval(render, 100)
 
 document.getElementById("move-left").onclick = () => updatePlayer({moving: "left"})
 document.getElementById("move-right").onclick = () => updatePlayer({moving: "right"})

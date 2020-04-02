@@ -1,5 +1,5 @@
 defmodule GameTest.Player do
-  defstruct [:name, :x, :y, is_alive: true]
+  defstruct [:name, :x, :y, status: :alive]
 
   @name_parts {[:scared, :scary, :critical, :strong], [:hero, :pickle, :gangsta, :cactus]}
 
@@ -14,10 +14,11 @@ defmodule GameTest.Player do
   def respawn(player, walls) do
     player
     |> assign_free_cell(walls)
-    |> Map.put(:is_alive, true)
+    |> Map.put(:status, :alive)
   end
 
-  def attack(%__MODULE__{is_alive: false}, players), do: players
+  def attack(%__MODULE__{status: :dead}, players), do: players
+  def attack(%__MODULE__{status: :respawning}, players), do: players
 
   def attack(%__MODULE__{} = player, players) do
     dead_players =
@@ -25,7 +26,7 @@ defmodule GameTest.Player do
       |> Enum.map(fn {_k, v} -> v end)
       |> Enum.reject(&self?(&1, player))
       |> Enum.filter(&near?(&1, player))
-      |> Enum.map(&{&1.name, %__MODULE__{&1 | is_alive: false}})
+      |> Enum.map(&{&1.name, %__MODULE__{&1 | status: :dead}})
       |> Map.new()
 
     Map.merge(players, dead_players)
@@ -33,7 +34,9 @@ defmodule GameTest.Player do
 
   def attack(_player, players), do: players
 
-  def move(%__MODULE__{is_alive: false} = player, _direction, _walls), do: player
+  def move(%__MODULE__{status: :dead} = player, _direction, _walls), do: player
+  def move(%__MODULE__{status: :respawning} = player, _direction, _walls), do: player
+
   def move(%__MODULE__{} = player, :left, walls), do: move(player, {-1, 0}, walls)
   def move(%__MODULE__{} = player, :right, walls), do: move(player, {1, 0}, walls)
   def move(%__MODULE__{} = player, :up, walls), do: move(player, {0, -1}, walls)

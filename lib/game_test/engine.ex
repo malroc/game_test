@@ -49,6 +49,15 @@ defmodule GameTest.Engine do
     {:reply, player, %{state | players: players}}
   end
 
+  def handle_call({:schedule_respawn_player, player_name}, _from, state) do
+    player =
+      state.players
+      |> Map.get(player_name)
+      |> Map.put(:status, :respawning)
+
+    {:reply, player, %{state | players: %{state.players | player_name => player}}}
+  end
+
   def handle_call({:move_player, player_name, direction}, _from, state) do
     player =
       state.players
@@ -71,10 +80,15 @@ defmodule GameTest.Engine do
     players =
       state.players
       |> Enum.reduce(state.players, fn {player_name, player}, players ->
-        if player.is_alive do
-          players
-        else
-          %{players | player_name => Player.respawn(player, state.walls)}
+        case player.status do
+          :alive ->
+            players
+
+          :dead ->
+            Map.delete(players, player_name)
+
+          :respawning ->
+            %{players | player_name => Player.respawn(player, state.walls)}
         end
       end)
 

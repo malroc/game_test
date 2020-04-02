@@ -14,7 +14,7 @@ defmodule GameTestWeb.Api.V1.PlayerView do
       name: player.name,
       x: player.x,
       y: player.y,
-      is_alive: player.is_alive
+      status: player.status
     }
   end
 end

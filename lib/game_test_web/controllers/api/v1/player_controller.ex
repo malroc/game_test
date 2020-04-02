@@ -3,10 +3,10 @@ defmodule GameTestWeb.Api.V1.PlayerController do
 
   alias GameTest.Engine
 
-  def update(conn, %{"id" => name, "moving" => direction}) do
+  def update(conn, %{"id" => name} = params) do
     case get_session(conn, :current_user_name) do
       ^name ->
-        player = GenServer.call(Engine, {:move_player, name, String.to_atom(direction)})
+        player = update_player(name, Map.delete(params, "id"))
         render(conn, "show.json", player: player)
 
       _ ->
@@ -14,15 +14,16 @@ defmodule GameTestWeb.Api.V1.PlayerController do
     end
   end
 
-  def update(conn, %{"id" => name, "attacking" => true}) do
-    case get_session(conn, :current_user_name) do
-      ^name ->
-        player = GenServer.call(Engine, {:attack_other_players, name})
-        render(conn, "show.json", player: player)
+  defp update_player(name, %{"status" => "respawning"}) do
+    GenServer.call(Engine, {:schedule_respawn_player, name})
+  end
 
-      _ ->
-        put_status(conn, :unauthorized)
-    end
+  defp update_player(name, %{"moving" => direction}) do
+    GenServer.call(Engine, {:move_player, name, String.to_atom(direction)})
+  end
+
+  defp update_player(name, %{"attacking" => true}) do
+    GenServer.call(Engine, {:attack_other_players, name})
   end
 
   def index(conn, _params) do
