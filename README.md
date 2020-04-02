@@ -25,3 +25,5 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 # Deployed version
 
 Available at [`game-test-2020.herokuapp.com`](https://game-test-2020.herokuapp.com)
+
+Please note that the app is hosted on a free Heroku account, hence it will start with a 30 second delay if called after some period of inactivity.
