@@ -17,7 +17,7 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
   * Install NPM dependencies with `npm install --prefix ./assets`
   * Compile assets with `npm run deploy --prefix ./assets`
   * Digest and compress static files with `mix phx.digest`
-  * Build a release with `SECRET_KEY_BASE=`mix phx.gen.secret` MIX_ENV=prod mix release --overwrite`
+  * Build a release with ``SECRET_KEY_BASE=`mix phx.gen.secre` MIX_ENV=prod mix release --overwrite``
   * Run server with `_build/prod/rel/game_test/bin/game_test art`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
