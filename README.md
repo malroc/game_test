@@ -1,6 +1,6 @@
 # GameTest
 
-To start your Phoenix server:
+## To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
   * Install Node.js dependencies with `cd assets && npm install`
@@ -8,12 +8,20 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## To run tests:
 
-## Learn more
+  * Start test suite with `mix test`
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+## To build and run a release:
+
+  * Install NPM dependencies with `npm install --prefix ./assets`
+  * Compile assets with `npm run deploy --prefix ./assets`
+  * Digest and compress static files with `mix phx.digest`
+  * Build a release with `SECRET_KEY_BASE=`mix phx.gen.secret` MIX_ENV=prod mix release --overwrite`
+  * Run server with `_build/prod/rel/game_test/bin/game_test art`
+
+Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+
+# Deployed version
+
+Available at [`game-test-2020.herokuapp.com`](https://game-test-2020.herokuapp.com)
